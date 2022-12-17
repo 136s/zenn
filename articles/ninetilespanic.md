@@ -199,7 +199,29 @@ conn.close()
 その 2600 通りの中で、3 つとも最高得点となるものを探索します。
 
 ```python
-TODO: コードを記載
+import itertools
+import sqlite3
+
+NUM_TILE = 9
+NUM_THEME = 26
+NUM_TURN = 3
+
+dbname = "success_pattern.db"
+max_points = [4, 4, 5, 0, 11, 11, 6, 20, 5, 6, 3, 6, 5, 4, -1, 7, 8, 4, 4, 3, 9, 6, 5, 5, 3, 4]
+
+conn = sqlite3.connect(dbname)
+cur = conn.cursor()
+for theme_set in itertools.combinations(range(NUM_THEME), NUM_TURN):
+    where = " AND ".join(["t{}={}".format(str(theme + 1).zfill(2), max_points[theme]) for theme in theme_set])
+    towns = cur.execute("SELECT pos, dir FROM towns WHERE " + where).fetchall()
+    if (num_found:=len(towns)) > 0:
+        suffix = "_".join([str(theme + 1) for theme in theme_set])
+        with open("./theme_set/theme_{}.txt".format(suffix), mode="w") as f:
+            for town in towns:
+                f.write(town[0].zfill(NUM_TILE) + town[1].zfill(NUM_TILE) + "\n")
+        print(theme_set, num_found)
+cur.close()
+conn.close()
 ```
 
 これでお題セットのファイルの中に、3 つともで最高得点となる町パターンが抽出されます。
@@ -224,6 +246,7 @@ TODO: コードを記載
 |(3, 4, 11)|7680|
 |(3, 4, 12)|402816|
 |(3, 4, 16)|192|
+|(3, 4, 21)|122110|
 |...|...|
 
 こちらもまだ計算中で、筆者の環境では 10 日くらいかかりそうです。
