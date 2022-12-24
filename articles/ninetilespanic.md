@@ -213,26 +213,27 @@ conn.close()
 
 ```python
 import itertools
+import numpy as np
 import sqlite3
 
 NUM_TILE = 9
 NUM_THEME = 26
 NUM_TURN = 3
 
-dbname = "success_pattern.db"
-max_points = [4, 4, 5, 0, 11, 11, 6, 20, 5, 6, 3, 6, 5, 4, -1, 7, 8, 4, 4, 3, 9, 6, 5, 5, 3, 4]
+dbname = "success_pattern_asis_server.db"
+max_points = np.asarray([4, 4, 5, 0, 11, 11, 6, 20, 5, 6, 3, 6, 5, 4, -1, 7, 8, 4, 4, 3, 9, 6, 5, 5, 3, 4])
 
 conn = sqlite3.connect(dbname)
 cur = conn.cursor()
-for theme_set in itertools.combinations(range(NUM_THEME), NUM_TURN):
-    where = " AND ".join(["t{}={}".format(str(theme + 1).zfill(2), max_points[theme]) for theme in theme_set])
-    towns = cur.execute("SELECT pos, dir FROM towns WHERE " + where).fetchall()
-    if (num_found:=len(towns)) > 0:
-        suffix = "_".join([str(theme + 1) for theme in theme_set])
-        with open("./theme_set/theme_{}.txt".format(suffix), mode="w") as f:
-            for town in towns:
-                f.write(town[0].zfill(NUM_TILE) + town[1].zfill(NUM_TILE) + "\n")
-        print(theme_set, num_found)
+for town in cur.execute("SELECT * FROM towns"):
+    points = np.asarray(town[3:])
+    distance = max_points - points
+    if np.count_nonzero(distance) <= NUM_THEME - NUM_TURN:
+        pattern = town[1].zfill(NUM_TILE) + town[2].zfill(NUM_TILE)
+        for theme_set in itertools.combinations(np.where(distance==0)[0].tolist(), NUM_TURN):
+            filename = "_".join([str(theme + 1).zfill(2) for theme in theme_set])
+            with open("./theme_set/theme_{}.txt".format(filename), mode="a+") as f:
+                f.write(pattern + "\n")
 cur.close()
 conn.close()
 ```
@@ -322,6 +323,43 @@ conn.close()
 |(5, 18, 23)|1906|
 |(5, 19, 23)|17632|
 |(6, 7, 23)|946176|
-|...|...|
+|(7, 15, 18)|44|
+|(7, 15, 19)|256|
+|(7, 15, 23)|1536|
+|(7, 18, 19)|2000|
+|(7, 18, 23)|1913|
+|(7, 19, 23)|69692|
+|(8, 19, 23)|65200|
+|(9, 11, 14)|1728|
+|(9, 11, 22)|4096|
+|(9, 11, 25)|27648|
+|(9, 11, 26)|9216|
+|(9, 14, 22)|1440|
+|(9, 14, 25)|12864|
+|(9, 14, 26)|2112|
+|(9, 22, 25)|27648|
+|(9, 22, 26)|27648|
+|(9, 25, 26)|46080|
+|(11, 14, 22)|64|
+|(11, 14, 25)|1728|
+|(11, 14, 26)|192|
+|(11, 15, 25)|3456|
+|(11, 17, 18)|18|
+|(11, 17, 19)|3576|
+|(11, 18, 19)|18|
+|(11, 22, 25)|14848|
+|(11, 22, 26)|14848|
+|(11, 24, 25)|9216|
+|(11, 25, 26)|23040|
+|(14, 21, 25)|16512|
+|(14, 22, 25)|4896|
+|(14, 22, 26)|4896|
+|(14, 25, 26)|8256|
+|(15, 18, 19)|44|
+|(15, 18, 23)|23|
+|(15, 19, 23)|128|
+|(17, 18, 19)|234|
+|(18, 19, 23)|4789|
+|(22, 25, 26)|523392|
 
-こちらもまだ計算中で、筆者の環境では 10 日くらいかかりそうです。
+筆者の環境では約 45 h で抽出が終わりました。
