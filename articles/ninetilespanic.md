@@ -599,6 +599,8 @@ conn.close()
 
 筆者の環境では、約 2 h で計算が終わりました。
 
+most_win.csv を純粋な得点に戻したファイルは [most_win_points.csv](https://github.com/136s/zenn/tree/main/files/ntp_results/theme_calc/most_win_points.csv) に出力しました。
+
 ## 最適解の最小解
 
 [お題セットごとの最適解（総当たり）](#お題セットごとの最適解総当たり)の結果からさらに 1 段階探索します。
