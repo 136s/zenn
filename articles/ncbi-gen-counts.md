@@ -22,17 +22,17 @@ published_at: 2023-12-18 00:00
 
 ![GSE164073 のサンプル一覧](/images/ncbi-gen-counts/GSE164073_samples.png)
 
-GSM には、各サンプルの条件などが登録されています。
+GSM は 1 つのサンプルに対応し、そのサンプルの条件などが登録されています。GSE は複数の GSM（通常は同一の研究・実験のサンプル）をまとめる単位です。
 
 ## 遺伝子発現量を取得する
 
-各サンプルの遺伝子発現量を得るには、通常、2 つの方法があります。
+サンプルの遺伝子発現量を得るには、通常、2 つの方法があります。
 
 1. データ登録者が計算したカウントデータを使う
 2. [Sequence Read Archive (SRA)](https://www.ncbi.nlm.nih.gov/sra) の生のリードデータを自分で変換する
 
 方法 1 として、ページ下部の **Supplementary file** にカウントデータが登録してある場合があります。
-GSE164073 では [`GSE164073_Eye_count_matrix.csv.gz`](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE164073&format=file&file=GSE164073%5FEye%5Fcount%5Fmatrix%2Ecsv%2Egz) が登録されているので、これらをダウンロードします。
+GSE164073 では [`GSE164073_Eye_count_matrix.csv.gz`](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE164073&format=file&file=GSE164073%5FEye%5Fcount%5Fmatrix%2Ecsv%2Egz) が登録されているので、これをダウンロードします。
 
 ![GSE164073 の Supplementary file](/images/ncbi-gen-counts/GSE164073_supp.png)
 
@@ -40,9 +40,9 @@ GSE164073 では [`GSE164073_Eye_count_matrix.csv.gz`](https://www.ncbi.nlm.nih.
 
 ![GSE164073_Eye_count_matrix.csv の抜粋](/images/ncbi-gen-counts/GSE164073_Eye_count_matrix.csv.png)
 
-のように、column はサンプル名（18 列）、index は遺伝子シンボル（27,946 行）で、中身が対応する発現量になっています。
+のように、column はサンプル名（18 列）、index は遺伝子シンボル（27,946 行）で、値は対応する発現量になっています。
 
-方法 2 として、**Supplementary file** の下の [SRA Run Selector](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA688734) リンクから SRA にアクセスします。
+方法 2 として、**Supplementary file** の下の [SRA Run Selector](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA688734) のリンクから SRA にアクセスします。
 GSE164073 では 23.49 Gb 分ののリードデータ（FASTQ ファイル）が登録されているので、これをダウンロードします。
 
 ![PRJNA688734](/images/ncbi-gen-counts/PRJNA688734.png)
